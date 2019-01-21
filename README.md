@@ -1,4 +1,4 @@
-# Remote Controlled Smart Lights
+# Remote Controlled Home Lights
                             %%%                            
                 #%,         %%(         %%#                
                  %%(        %%*        %%%                 
