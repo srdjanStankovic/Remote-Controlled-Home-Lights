@@ -56,7 +56,7 @@ def main():
 Run `sonoff-switches.py` in console and switches become connected on WolkAbout.
 Add Actuator widgets and I become abled to control it. It looks similar to this:
 
-![Capture](/uploads/8ee3e8bc3382a02b7d2460151027cda2/Capture.PNG)
+<img width="272" alt="capture" src="https://user-images.githubusercontent.com/8199494/51498816-403e4c00-1dc8-11e9-9b69-c41bc9acaf73.PNG">
 
 #### 5'th step
 At the end I deployed `sonoff-switches.py` file as systemctl service following ***Method 4: SYSTEMD*** from [THIS](https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/) guide.
