@@ -1,2 +1,65 @@
-# Remote-Controlled-Smart-Lights
-I connected two Sonoff switches over Raspberry Pi 3 to WolkAbout IoT Platform to control light at my home.
+# Remote Controlled Smart Lights
+                            %%%                            
+                #%,         %%(         %%#                
+                 %%(        %%*        %%%                 
+                  ,%%       (%        %%                   
+                    #     #%%%%%*     ,                    
+                      #%#........,%%,                      
+         %%%%%%%%,  %%..............%%   #%%%%%%%%         
+                   /%................,%                    
+                   %%....&@*@@@/@#....%.                   
+                   ,%...|..........@..%                    
+                    *%..#.........(.(%                     
+                      (%.,......,.,%                       
+                       %,#......%.%.                       
+                       %#./.....,.%                        
+                       /%.%....,..%                        
+                        %%%%%%%%%%#                        
+                           %%%%                           
+                           .,,,                            
+                                                                                        
+
+In this project, I connected two Sonoff switches over Raspberry Pi3 to WolkAbout IoT Platform to control light at my home. One Sonoff switch is installed to my lamp in the dining room and another one to background light on the kitchen working area.
+
+# Prerequisite
+
+Hardware:
+ * [Raspberry Pi 3 Model B](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/)
+ * [Sonoff Switches](https://www.sonoff.in/index.php?route=product/product&path=62&product_id=75)
+
+Software:
+ * [Sonoff-Switch-Control](https://github.com/srdjanStankovic/Sonoff-Switch-Control) python script
+ * [WolkAbout IoT Platform account](https://demo.wolkabout.com/#/get-started)
+ * [wolk-connect](https://pypi.org/project/wolk-connect/) library
+
+# Usage
+
+#### 1'st step
+Firstly I connect, configure and test my both Sonoff switches to my WiFi network following [Sonoff-Switch-Control](https://github.com/srdjanStankovic/Sonoff-Switch-Control) guide.
+
+#### 2'nd step
+As second I create account on WolkAbout, upload template `Sonoff-Switches.json` and [create device]((https://www.youtube.com/watch?v=QllMw9Tw2ns)). As output of this action I get device key & password.
+
+#### 3'rd step
+Then I `ssh` to my RPI and install WolkAbout lib as `pip install wolk-connect`. My RPI is connected on the same WiFi as mine Sonoff switches. After this I clone this repo to RPI and insert key and password in `sonoff-switches.py` file:
+
+```
+def main():
+    device = wolk.Device(
+        key="some-key",
+        password="some-password",
+        actuator_references=["SW1", "SW2"],
+    )
+```
+
+#### 4'th step
+Run `sonoff-switches.py` in console and switches become connected on WolkAbout.
+Add Actuator widgets and I become abled to control it. It looks similar to this:
+
+![Capture](/uploads/8ee3e8bc3382a02b7d2460151027cda2/Capture.PNG)
+
+#### 5'th step
+At the end I deployed `sonoff-switches.py` file as systemctl service following ***Method 4: SYSTEMD*** from [THIS](https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/) guide.
+
+# Conclusion
+Now, I'm able to control my lamp and kitchen light over my phone . Web I used rarely, sometimes when I read on my laptop. Idea is to continue with this project and integrate voice control platform with my RPI or with WolkAbout.
