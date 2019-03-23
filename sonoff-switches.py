@@ -8,16 +8,22 @@ import time
 
 import requests
 
+import xml.etree.ElementTree as ET
+
 from persistent_queue import PersistentQueue
 import wolk  # noqa
 
-#Read this from file
+
+#Read switches from file
+tree = ET.parse('Sonoff-Switch-Control/config.xml')
+root = tree.getroot()
+number_of_children = len(root.getchildren())
 #Switch1
-SWITCH1_ADD "192.168.0.19"
-SWITCH1_REF "SW1"
+SWITCH1_REF = root[0][0].text
+SWITCH1_ADD = root[0][1].text
 #Switch2
-SWITCH2_ADD "192.168.0.15"
-SWITCH2_REF "SW2"
+SWITCH2_REF = root[1][0].text
+SWITCH2_ADD = root[1][1].text
 
 
 def sonoff_switch(ip_add, value):
@@ -31,8 +37,8 @@ def sonoff_switch(ip_add, value):
 	try:
 		response = requests.post(base_url, data=payload)
 	except:
-		print("Couldn't change switch state")
-		return False
+                print("Couldn't change switch state")
+                return False
 
 	print(response.text) #TEXT/HTML
 	print(response.status_code, response.reason) #HTTP
