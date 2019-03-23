@@ -1,0 +1,3 @@
+[submodule "Sonoff-Switch-Control"]
+	path = Sonoff-Switch-Control
+	url = https://github.com/srdjanStankovic/Sonoff-Switch-Control
