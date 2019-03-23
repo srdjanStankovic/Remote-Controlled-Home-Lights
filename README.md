@@ -43,6 +43,7 @@ As second I create account on WolkAbout, upload template `Sonoff-Switches.json` 
 #### 3'rd step
 Then I `ssh` to my RPI and install WolkAbout lib as `pip install wolk-connect`. My RPI is connected on the same WiFi as mine Sonoff switches. 
 Clone this repo to RPI with following command:
+
 `git clone --recurse-submodules https://github.com/srdjanStankovic/Remote-Controlled-Home-Lights.git`
 
 Then insert key and password in `sonoff-switches.py` file:
