@@ -11,6 +11,15 @@ import requests
 from persistent_queue import PersistentQueue
 import wolk  # noqa
 
+#Read this from file
+#Switch1
+SWITCH1_ADD "192.168.0.19"
+SWITCH1_REF "SW1"
+#Switch2
+SWITCH2_ADD "192.168.0.15"
+SWITCH2_REF "SW2"
+
+
 def sonoff_switch(ip_add, value):
 	base_url="http://"+ ip_add + "/control?cmd=event,Turn"
 	if value==1 or value=='true':
@@ -35,7 +44,7 @@ def main():
     device = wolk.Device(
         key="some-key", #change this
         password="some-password", #change this
-        actuator_references=["SW1", "SW2"],
+        actuator_references=[SWITCH1_REF, SWITCH2_REF],
     )
 
     class ActuatorSimulator:
@@ -48,28 +57,28 @@ def main():
     # Provide a way to read actuator status if your device has actuators
     class ActuatorStatusProviderImpl(wolk.ActuatorStatusProvider):
         def get_actuator_status(self, reference):
-            if reference == "SW1":
+            if reference == SWITCH1_REF:
                 return wolk.ACTUATOR_STATE_READY, switch1.value
-            elif reference == "SW2":
+            elif reference == SWITCH2_REF:
                 return wolk.ACTUATOR_STATE_READY, switch2.value
 
     # Provide an actuation handler if your device has actuators
     class ActuationHandlerImpl(wolk.ActuationHandler):
         def handle_actuation(self, reference, value):
             print("Setting actuator " + reference + " to value: " + str(value))
-            if reference == "SW1":
-                if sonoff_switch("192.168.0.14", value):
+            if reference == SWITCH1_REF:
+                if sonoff_switch(SWITCH1_ADD, value):
                     switch1.value = value
                 else:
 		    #Set switch in inactive state
-                    switch1.value = false
+                    switch1.value = 0
 
-            elif reference == "SW2":
-                if sonoff_switch("192.168.0.15", value):
+            elif reference == SWITCH2_REF:
+                if sonoff_switch(SWITCH2_ADD, value):
                     switch2.value = value
                 else:
 		    #Set switch in inactive state
-                    switch2.value = false
+                    switch2.value = 0
 
     # Custom queue example
     class FilesystemOutboundMessageQueue(wolk.OutboundMessageQueue):
@@ -118,8 +127,8 @@ def main():
         print(str(e))
         sys.exit(1)
 
-    wolk_device.publish_actuator_status("SW1")
-    wolk_device.publish_actuator_status("SW2")
+    wolk_device.publish_actuator_status(SWITCH1_REF)
+    wolk_device.publish_actuator_status(SWITCH2_REF)
 
 
 if __name__ == "__main__":
