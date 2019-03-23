@@ -19,10 +19,10 @@ tree = ET.parse('Sonoff-Switch-Control/config.xml')
 root = tree.getroot()
 number_of_children = len(root.getchildren())
 #Switch1
-SWITCH1_REF = root[0][0].text
+SWITCH1_REF = "SW1"
 SWITCH1_ADD = root[0][1].text
 #Switch2
-SWITCH2_REF = root[1][0].text
+SWITCH2_REF = "SW2"
 SWITCH2_ADD = root[1][1].text
 
 
