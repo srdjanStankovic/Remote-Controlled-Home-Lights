@@ -58,7 +58,7 @@ def main():
 ```
 
 #### 4'th step
-Run `sonoff-switches.py` in console and switches become connected on WolkAbout.
+Run `python sonoff-switches.py` in console and switches will become connected on WolkAbout.
 Add Actuator widgets and I become enabled to control it. It looks similar to this:
 
 <img width="272" alt="capture" src="https://user-images.githubusercontent.com/8199494/51498816-403e4c00-1dc8-11e9-9b69-c41bc9acaf73.PNG">
