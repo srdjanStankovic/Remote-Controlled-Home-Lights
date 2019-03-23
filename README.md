@@ -47,7 +47,7 @@ Clone this repo to RPI with following command:
 
 `git clone --recurse-submodules https://github.com/srdjanStankovic/Remote-Controlled-Home-Lights.git`
 
-Then insert key and password in `sonoff-switches.py` file:
+Navigate into `Remote-Controlled-Home-Lights` and then insert **key** and **password** into `sonoff-switches.py` file(key and password are given while device is created on WolkAbout- described in 2'nd step):
 ```
 def main():
     device = wolk.Device(
