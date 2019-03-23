@@ -63,8 +63,8 @@ Add Actuator widgets and I become enabled to control it. It looks similar to thi
 
 <img width="272" alt="capture" src="https://user-images.githubusercontent.com/8199494/51498816-403e4c00-1dc8-11e9-9b69-c41bc9acaf73.PNG">
 
-#### 5'th step
-At the end I deployed `sonoff-switches.py` file as systemctl service following ***Method 4: SYSTEMD*** from [THIS](https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/) guide.
+#### 5'th step (Optional)
+At the end I deployed `sonoff-switches.py` file as systemctl service following ***Method 4: SYSTEMD*** from [THIS](https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/) guide. This is good beacuse service will continue to run in background and even when any kind of reset ocuurs.
 
 # Conclusion
 Now, I'm able to control my lamp and kitchen light over my phone . Web I used rarely, sometimes when I read on my laptop. Idea is to continue with this project and integrate voice control platform with my RPI or with WolkAbout.
