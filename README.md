@@ -28,7 +28,7 @@ Hardware:
  * [Sonoff Switches](https://www.sonoff.in/index.php?route=product/product&path=62&product_id=75)
 
 Software:
- * Python3 with installed pip. *NOTE:* scripts and dependencies don't support Python2!
+ * Python3 with installed pip. **NOTE:** scripts and dependencies don't support Python2!
  * [Sonoff-Switch-Control](https://github.com/srdjanStankovic/Sonoff-Switch-Control) python script
  * [WolkAbout IoT Platform account](https://demo.wolkabout.com/#/get-started)
  * [wolk-connect](https://pypi.org/project/wolk-connect/) library
