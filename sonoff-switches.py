@@ -7,6 +7,7 @@ import sys
 import time
 
 import requests
+import logging
 
 import xml.etree.ElementTree as ET
 
@@ -14,6 +15,7 @@ from persistent_queue import PersistentQueue
 import wolk  # noqa
 
 
+logging.basicConfig(level=logging.DEBUG)
 #Read switches from file
 tree = ET.parse('Sonoff-Switch-Control/config.xml')
 root = tree.getroot()
@@ -48,8 +50,8 @@ def sonoff_switch(ip_add, value):
 
 def main():
     device = wolk.Device(
-        key="some-key", #change this
-        password="some-password", #change this
+        key="eni4ni5zfand25dk", #change this
+        password="21d4c23c-91f5-450c-b0e2-54c8afb37911", #change this
         actuator_references=[SWITCH1_REF, SWITCH2_REF],
     )
 
@@ -64,9 +66,9 @@ def main():
     class ActuatorStatusProviderImpl(wolk.ActuatorStatusProvider):
         def get_actuator_status(self, reference):
             if reference == SWITCH1_REF:
-                return wolk.ACTUATOR_STATE_READY, switch1.value
+                return wolk.ActuatorState.READY, switch1.value
             elif reference == SWITCH2_REF:
-                return wolk.ACTUATOR_STATE_READY, switch2.value
+                return wolk.ActuatorState.READY, switch2.value
 
     # Provide an actuation handler if your device has actuators
     class ActuationHandlerImpl(wolk.ActuationHandler):
@@ -76,14 +78,14 @@ def main():
                 if sonoff_switch(SWITCH1_ADD, value):
                     switch1.value = value
                 else:
-		    #Set switch in inactive state
+                    logging.error("Actuation Fialed. Set switch in inactive state")
                     switch1.value = 0
 
             elif reference == SWITCH2_REF:
                 if sonoff_switch(SWITCH2_ADD, value):
                     switch2.value = value
                 else:
-		    #Set switch in inactive state
+                    logging.error("Actuation Failed. Set switch in inactive state")
                     switch2.value = 0
 
     # Custom queue example
