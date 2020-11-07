@@ -50,8 +50,8 @@ def sonoff_switch(ip_add, value):
 
 def main():
     device = wolk.Device(
-        key="eni4ni5zfand25dk", #change this
-        password="21d4c23c-91f5-450c-b0e2-54c8afb37911", #change this
+        key="some-key", #change this
+        password="some-password", #change this
         actuator_references=[SWITCH1_REF, SWITCH2_REF],
     )
 
