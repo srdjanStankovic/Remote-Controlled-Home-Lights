@@ -5,7 +5,7 @@
  [Service]
  Type=idle
  WorkingDirectory=/home/pi/Remote-Controlled-Home-Lights/
- ExecStart=/bin/bash /home/pi/Remote-Controlled-Home-Lights/start.sh
+ ExecStart=/bin/bash /home/pi/Remote-Controlled-Home-Lights/utility/start.sh
  User=root
  Group=root
  Restart=always

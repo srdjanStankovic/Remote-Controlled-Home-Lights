@@ -121,7 +121,7 @@ def main():
             outbound_message_queue=filesystemOutboundMessageQueue,
             host="api-demo.wolkabout.com",
             port=8883,
-            ca_cert="ca.crt"
+            ca_cert="utility/ca.crt"
         )
     except RuntimeError as e:
         print(str(e))
