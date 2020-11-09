@@ -69,12 +69,6 @@ def main():
     Create actuation handler and actuator status provider
     for switch and slider actuators.
 
-    Create configuration handler and configuration provider
-    for 4 types of configuration options.
-
-    Create a firmware installer and handler
-    for enabling firmware update.
-
     Pass all of these to a WolkConnect class
     and start a loop to send different types of random readings.
     """
@@ -144,7 +138,6 @@ def main():
     )
 
     # Establish a connection to the WolkAbout IoT Platform
-    logging.info("Connecting to WolkAbout IoT Platform")
     logging.info("Connecting to WolkAbout IoT Platform")
     try:
         wolk_device.connect()
