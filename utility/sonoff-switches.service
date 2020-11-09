@@ -1,0 +1,14 @@
+ [Unit]
+ Description=Sonoff Switches
+ After=multi-user.target
+
+ [Service]
+ Type=idle
+ WorkingDirectory=/home/pi/Remote-Controlled-Home-Lights/
+ ExecStart=/bin/bash /home/pi/Remote-Controlled-Home-Lights/utility/start.sh
+ User=root
+ Group=root
+ Restart=always
+
+ [Install]
+ WantedBy=multi-user.target
