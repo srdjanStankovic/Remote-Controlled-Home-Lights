@@ -1,23 +1,41 @@
-#!/usr/bin/python
-
-import math
+"""Example that covers all the functionality of WolkConnect-Python."""
+#   Copyright 2020 WolkAbout Technology s.r.o.
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+import json
 import os
 import random
 import sys
 import time
-
-import requests
 import logging
-
+import requests
 import xml.etree.ElementTree as ET
+from traceback import print_exc
+from typing import Dict
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
-from persistent_queue import PersistentQueue
+module_path = os.sep + ".." + os.sep + ".." + os.sep
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + module_path)
 import wolk  # noqa
 
 logging.basicConfig(level=logging.DEBUG)
-#Read switches from file
-tree = ET.parse('Sonoff-Switch-Control/config.xml')
 
+firmware_version = "1.0"
+
+# Read switches from file
+tree = ET.parse("Sonoff-Switch-Control/config.xml")
 root = tree.getroot()
 number_of_children = len(root.getchildren())
 # Switch1
@@ -35,109 +53,140 @@ def sonoff_switch(ip_add, value):
     else:
         base_url = base_url + "Off"
 
+    logging.debug(base_url)
     payload = {}
     try:
         response = requests.post(base_url, data=payload)
     except:
-        print("Couldn't change switch state")
+        logging.error("Couldn't change switch state.")
         return False
 
-    print(response.text)  # TEXT/HTML
-    print(response.status_code, response.reason)  # HTTP
+    logging.info(response.text)  # TEXT/HTML
+    logging.info(str(response.status_code) + str(response.reason))  # HTTP
 
     return True
 
 
 def main():
+    """
+    Demonstrate all functionality of wolk module.
+
+    Create actuation handler and actuator status provider
+    for switch and slider actuators.
+
+    Create configuration handler and configuration provider
+    for 4 types of configuration options.
+
+    Create a firmware installer and handler
+    for enabling firmware update.
+
+    Pass all of these to a WolkConnect class
+    and start a loop to send different types of random readings.
+    """
+    # Insert the device credentials received
+    # from WolkAbout IoT Platform when creating the device
+    # List actuator references included on your device
+    actuator_references = [SWITCH1_REF, SWITCH2_REF]
     device = wolk.Device(
-        key="some-key",  # change this
-        password="some-password",  # change this
-        actuator_references=[SWITCH1_REF, SWITCH2_REF],
+        key="852c335e-e278-416f-a3ac-6350edbeda39",
+        password="JJJZMYTP7N",
+        actuator_references=actuator_references,
     )
 
-    class ActuatorSimulator:
-        def __init__(self, inital_value):
+    class Actuator:
+        def __init__(
+            self, inital_value: Optional[Union[bool, int, float, str]]
+        ):
             self.value = inital_value
 
-    switch1 = ActuatorSimulator(False)
-    switch2 = ActuatorSimulator(False)
+    switch1 = Actuator(False)
+    switch2 = Actuator(False)
 
     # Provide a way to read actuator status if your device has actuators
-    class ActuatorStatusProviderImpl(wolk.ActuatorStatusProvider):
-        def get_actuator_status(self, reference):
-            if reference == SWITCH1_REF:
-                return wolk.ActuatorState.READY, switch1.value
-            elif reference == SWITCH2_REF:
-                return wolk.ActuatorState.READY, switch2.value
+    def actuator_status_provider(
+        reference: str,
+    ) -> Tuple[wolk.State, Optional[Union[bool, int, float, str]]]:
+        if reference == actuator_references[0]:
+            return wolk.State.READY, switch1.value
+        elif reference == actuator_references[1]:
+            return wolk.State.READY, switch2.value
+
+        return wolk.State.ERROR, None
 
     # Provide an actuation handler if your device has actuators
-    class ActuationHandlerImpl(wolk.ActuationHandler):
-        def handle_actuation(self, reference, value):
-            print("Setting actuator " + reference + " to value: " + str(value))
-            if reference == SWITCH1_REF:
-                if sonoff_switch(SWITCH1_ADD, value):
-                    switch1.value = value
-                else:
-                    logging.error("Actuation Fialed. Set switch in inactive state")
-                    switch1.value = 0
-
-            elif reference == SWITCH2_REF:
-                if sonoff_switch(SWITCH2_ADD, value):
-                    switch2.value = value
-                else:
-                    logging.error("Actuation Failed. Set switch in inactive state")
-                    switch2.value = 0
-
-    # Custom queue example
-    class FilesystemOutboundMessageQueue(wolk.OutboundMessageQueue):
-        def __init__(self, path="."):
-            if path == ".":
-                self.queue = PersistentQueue("FileOutboundMessageQueue")
+    def actuation_handler(
+        reference: str, value: Union[bool, int, float, str]
+    ) -> None:
+        logging.info(f"Setting actuator '{reference}' to value: {value}")
+        if reference == actuator_references[0]:
+            if sonoff_switch(SWITCH1_ADD, value):
+                switch1.value = value
             else:
-                self.queue = PersistentQueue("FileOutboundMessageQueue", path)
+                # Set switch in inactive state
+                switch1.value = 0
 
-        def put(self, message):
-            self.queue.push(message)
-
-        def get(self):
-            message = self.queue.pop()
-            self.queue.flush()
-            return message
-
-        def peek(self):
-            if not self.queue.peek():
-                self.queue.clear()
-                return None
+        elif reference == actuator_references[1]:
+            if sonoff_switch(SWITCH2_ADD, value):
+                switch2.value = value
             else:
-                return self.queue.peek()
+                # Set switch in inactive state
+                switch2.value = 0
 
-    filesystemOutboundMessageQueue = FilesystemOutboundMessageQueue()
+    # Extend this class to handle the installing of the firmware file
+    class MyFirmwareHandler(wolk.FirmwareHandler):
+        def install_firmware(self, firmware_file_path: str) -> None:
+            """Handle the installing of the firmware file here."""
+            logging.info(f"Installing firmware from path: {firmware_file_path}")
+            time.sleep(5)
+            sys.exit()
 
-    try:
-        wolk_device = wolk.WolkConnect(
+        def get_current_version(self) -> str:
+            """Return current firmware version."""
+            return firmware_version
+
+    # Pass device and optionally connection details
+    # Provided connection details are the default value
+    # Provide actuation handler and actuator status provider via with_actuators
+    # Provide configuration provider/handler via with_configuration
+    # Enable file management and firmware update via their respective methods
+    wolk_device = (
+        wolk.WolkConnect(
             device=device,
-            actuation_handler=ActuationHandlerImpl(),
-            actuator_status_provider=ActuatorStatusProviderImpl(),
-            outbound_message_queue=filesystemOutboundMessageQueue,
             host="api-demo.wolkabout.com",
             port=8883,
-            ca_cert="utility/ca.crt"
+            ca_cert="utility/ca.crt",
         )
-    except RuntimeError as e:
-        print(str(e))
-        sys.exit(1)
+        .with_actuators(
+            actuation_handler=actuation_handler,
+            actuator_status_provider=actuator_status_provider,
+        )        
+        .with_file_management(
+            preferred_package_size=1000 * 1000,
+            max_file_size=100 * 1000 * 1000,
+            file_directory="files",
+        )
+        .with_firmware_update(firmware_handler=MyFirmwareHandler())
+        # Possibility to provide custom implementations for some features
+        # .with_custom_protocol(message_factory, message_deserializer)
+        # .with_custom_connectivity(connectivity_service)
+        # .with_custom_message_queue(message_queue)
+    )
 
     # Establish a connection to the WolkAbout IoT Platform
-    print("Connecting to WolkAbout IoT Platform")
+    logging.info("Connecting to WolkAbout IoT Platform")
+    logging.info("Connecting to WolkAbout IoT Platform")
     try:
         wolk_device.connect()
     except RuntimeError as e:
-        print(str(e))
+        logging.error(str(e))
         sys.exit(1)
 
+    # Successfully connecting to the platform will publish device configuration
+    # all actuator statuses, files present on device, current firmware version
+    # and the result of a firmware update if it occurred
     wolk_device.publish_actuator_status(SWITCH1_REF)
     wolk_device.publish_actuator_status(SWITCH2_REF)
 
-
 if __name__ == "__main__":
     main()
+
