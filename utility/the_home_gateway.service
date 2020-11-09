@@ -4,11 +4,12 @@
 
  [Service]
  Type=idle
- WorkingDirectory=/home/pi/Remote-Controlled-Home-Lights/
- ExecStart=/bin/bash /home/pi/Remote-Controlled-Home-Lights/utility/start.sh
+ WorkingDirectory=/home/stankovic/Remote-Controlled-Home-Lights/
+ ExecStart=/bin/bash /home/stankovic/Remote-Controlled-Home-Lights/utility/start.sh
  User=root
  Group=root
  Restart=always
 
  [Install]
  WantedBy=multi-user.target
+
