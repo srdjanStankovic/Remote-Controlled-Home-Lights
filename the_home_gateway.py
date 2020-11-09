@@ -4,7 +4,6 @@
 #
 # MIT License
 # Copyright (c) 2019 SrdjanStankovic
-
 import os
 import sys
 import time
@@ -25,6 +24,7 @@ from sonoff_control import SWITCH1_ADD
 from sonoff_control import SWITCH2_ADD
 from sonoff_control import sonoff_switch
 
+VERSION = 1.0
 
 def main():
     """
