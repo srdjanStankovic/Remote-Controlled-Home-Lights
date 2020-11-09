@@ -1,24 +1,14 @@
-"""Example that covers all the functionality of WolkConnect-Python."""
-#   Copyright 2020 WolkAbout Technology s.r.o.
+#!/usr/bin/python3
 #
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
+# Remote Controlled Home Light
 #
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-import json
+# MIT License
+# Copyright (c) 2019 SrdjanStankovic
+
 import os
 import sys
 import time
 import logging
-import requests
-import xml.etree.ElementTree as ET
 from typing import Optional
 from typing import Tuple
 from typing import Union
@@ -29,37 +19,11 @@ import wolk  # noqa
 
 logging.basicConfig(level=logging.DEBUG)
 
-# Read switches from file
-tree = ET.parse("Sonoff-Switch-Control/config.xml")
-root = tree.getroot()
-number_of_children = len(root.getchildren())
-# Switch1
-SWITCH1_REF = "SW1"
-SWITCH1_ADD = root[0][1].text
-# Switch2
-SWITCH2_REF = "SW2"
-SWITCH2_ADD = root[1][1].text
-
-
-def sonoff_switch(ip_add, value):
-    base_url = "http://" + ip_add + "/control?cmd=event,Turn"
-    if value == 1 or value == "true":
-        base_url = base_url + "On"
-    else:
-        base_url = base_url + "Off"
-
-    logging.debug(base_url)
-    payload = {}
-    try:
-        response = requests.post(base_url, data=payload)
-    except:
-        logging.error("Couldn't change switch state.")
-        return False
-
-    logging.info(response.text)  # TEXT/HTML
-    logging.info(str(response.status_code) + str(response.reason))  # HTTP
-
-    return True
+from sonoff_control import SWITCH1_REF
+from sonoff_control import SWITCH2_REF
+from sonoff_control import SWITCH1_ADD
+from sonoff_control import SWITCH2_ADD
+from sonoff_control import sonoff_switch
 
 
 def main():
@@ -145,9 +109,7 @@ def main():
         logging.error(str(e))
         sys.exit(1)
 
-    # Successfully connecting to the platform will publish device configuration
-    # all actuator statuses, files present on device, current firmware version
-    # and the result of a firmware update if it occurred
+    # Successfully connecting to the platform will publish actuator status
     wolk_device.publish_actuator_status(SWITCH1_REF)
     wolk_device.publish_actuator_status(SWITCH2_REF)
 

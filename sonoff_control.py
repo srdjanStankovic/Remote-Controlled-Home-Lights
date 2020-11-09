@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/python3
 import logging
 import requests
 import xml.etree.ElementTree as ET
