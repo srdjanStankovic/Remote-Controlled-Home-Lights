@@ -41,8 +41,8 @@ def main():
     # List actuator references included on your device
     actuator_references = [SWITCH1_REF, SWITCH2_REF]
     device = wolk.Device(
-        key="852c335e-e278-416f-a3ac-6350edbeda39",
-        password="JJJZMYTP7N",
+        key="some-key",
+        password="some-password",
         actuator_references=actuator_references,
     )
 
