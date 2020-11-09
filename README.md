@@ -47,7 +47,7 @@ Clone this repo to RPI with following command:
 Navigate to path `Remote-Controlled-Home-Lights/Sonoff-Switch-Control/`. Then you need to connect, configure and test your both Sonoff switches to your WiFi network following this repo [Sonoff-Switch-Control](https://github.com/srdjanStankovic/Sonoff-Switch-Control) guide. You actually downloaded this repo as submodule and you are navigated on it's location on your RPI.
 
 #### 4'th step
-When you succefully control your Sonoff's navigate one folder back to `Remote-Controlled-Home-Lights/`. Here insert **key** and **password** into `sonoff-switches.py` file(key and password are given while device is created on WolkAbout- described in 1'st step):
+When you succefully control your Sonoff's navigate one folder back to `Remote-Controlled-Home-Lights/`. Here insert **key** and **password** into `the_home_gateway.py` file(key and password are given while device is created on WolkAbout- described in 1'st step):
 ```
 def main():
     device = wolk.Device(
@@ -58,13 +58,13 @@ def main():
 ```
 
 #### 5'th step
-Run `python sonoff-switches.py` in console and switches will become connected on WolkAbout.
+Run `python3 the_home_gateway.py` in console and switches will become connected on WolkAbout.
 Add Actuator widgets and I become enabled to control it. It looks similar to this:
 
 <img width="272" alt="capture" src="https://user-images.githubusercontent.com/8199494/51498816-403e4c00-1dc8-11e9-9b69-c41bc9acaf73.PNG">
 
 #### 6'th step (Optional)
-At the end I deployed `sonoff-switches.py` file as systemctl service following ***Method 4: SYSTEMD*** from [THIS](https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/) guide. This is good beacuse service will continue to run in background and even when any kind of reset ocuurs.
+At the end I deployed `the_home_gateway.py` file as systemctl service following ***Method 4: SYSTEMD*** from [THIS](https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/) guide. This is good beacuse service will continue to run in background and even when any kind of reset ocuurs.
 
 
 # Conclusion
