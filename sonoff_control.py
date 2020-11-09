@@ -1,4 +1,10 @@
 #!/usr/bin/python3
+#
+# Sonoff switch control
+#
+# MIT License
+# Copyright (c) 2019 SrdjanStankovic
+
 import logging
 import requests
 import xml.etree.ElementTree as ET
