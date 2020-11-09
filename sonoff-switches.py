@@ -14,14 +14,11 @@
 #   limitations under the License.
 import json
 import os
-import random
 import sys
 import time
 import logging
 import requests
 import xml.etree.ElementTree as ET
-from traceback import print_exc
-from typing import Dict
 from typing import Optional
 from typing import Tuple
 from typing import Union
@@ -31,8 +28,6 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__)) + module_path)
 import wolk  # noqa
 
 logging.basicConfig(level=logging.DEBUG)
-
-firmware_version = "1.0"
 
 # Read switches from file
 tree = ET.parse("Sonoff-Switch-Control/config.xml")
@@ -132,23 +127,9 @@ def main():
                 # Set switch in inactive state
                 switch2.value = 0
 
-    # Extend this class to handle the installing of the firmware file
-    class MyFirmwareHandler(wolk.FirmwareHandler):
-        def install_firmware(self, firmware_file_path: str) -> None:
-            """Handle the installing of the firmware file here."""
-            logging.info(f"Installing firmware from path: {firmware_file_path}")
-            time.sleep(5)
-            sys.exit()
-
-        def get_current_version(self) -> str:
-            """Return current firmware version."""
-            return firmware_version
-
     # Pass device and optionally connection details
     # Provided connection details are the default value
     # Provide actuation handler and actuator status provider via with_actuators
-    # Provide configuration provider/handler via with_configuration
-    # Enable file management and firmware update via their respective methods
     wolk_device = (
         wolk.WolkConnect(
             device=device,
@@ -160,16 +141,6 @@ def main():
             actuation_handler=actuation_handler,
             actuator_status_provider=actuator_status_provider,
         )        
-        .with_file_management(
-            preferred_package_size=1000 * 1000,
-            max_file_size=100 * 1000 * 1000,
-            file_directory="files",
-        )
-        .with_firmware_update(firmware_handler=MyFirmwareHandler())
-        # Possibility to provide custom implementations for some features
-        # .with_custom_protocol(message_factory, message_deserializer)
-        # .with_custom_connectivity(connectivity_service)
-        # .with_custom_message_queue(message_queue)
     )
 
     # Establish a connection to the WolkAbout IoT Platform
