@@ -1,4 +1,4 @@
 wolk-connect==4.1.3
 ET==0.0.2
-requests==2.31.0
+requests==2.32.0
 
